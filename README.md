@@ -19,16 +19,29 @@ The production files will be created inside the `dist` folder.
 
 ## Environments
 
-| Branch    | Purpose                          | URL                       |
-| --------- | -------------------------------- | ------------------------- |
-| `local`   | Active development               | `localhost:5173`          |
-| `staging` | Pre-launch testing on Hostinger  | http://drp.4klabs.net/    |
-| `live`    | Production (TBD)                 | _not yet deployed_        |
+| Branch          | Purpose                                       | URL                       |
+| --------------- | --------------------------------------------- | ------------------------- |
+| `local`         | Active development                            | `localhost:5173`          |
+| `staging`       | Pre-launch testing — source for the build     | (not served directly)     |
+| `staging-build` | Auto-generated build output served by Hostinger | http://drp.4klabs.net/  |
+| `live`          | Production (TBD)                              | _not yet deployed_        |
 
-Pushes to `staging` are built and uploaded to Hostinger automatically by
-`.github/workflows/deploy-staging.yml`. See that file's comments for the
-required GitHub repository secrets (`FTP_SERVER`, `FTP_USERNAME`,
-`FTP_PASSWORD`, `FTP_SERVER_DIR`).
+### Why a build branch?
+
+The browser cannot execute the JSX source in `staging` directly. The
+GitHub Action `.github/workflows/deploy-staging.yml` runs `npm run build`
+on every push to `staging` and force-pushes the resulting `dist/`
+contents to `staging-build`. Hostinger's GIT integration pulls from
+`staging-build` into `public_html` and serves the compiled site.
+
+### Promotion flow
+
+```bash
+# work happens on local
+git checkout staging
+git merge local
+git push                # triggers build → publishes to staging-build → live on drp.4klabs.net
+```
 
 ## Replace before launch
 

@@ -1,20 +1,24 @@
-name: Deploy to Staging
+name: Build Staging
 
-# Builds the Vite app and uploads the dist/ folder to Hostinger via FTP
-# whenever the `staging` branch is updated. Manual runs allowed too.
+# When `staging` is updated, build the Vite app and publish the compiled
+# `dist/` contents to the `staging-build` branch. Hostinger's GIT
+# integration is configured to pull from `staging-build`, so the built
+# site is what actually lands in public_html.
 
 on:
   push:
     branches: [staging]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  build-and-deploy:
+  build-and-publish:
     runs-on: ubuntu-latest
-    environment: staging
 
     steps:
-      - name: Checkout
+      - name: Checkout source
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -29,13 +33,14 @@ jobs:
       - name: Build site
         run: npm run build
 
-      - name: Deploy to Hostinger via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Publish dist/ to staging-build branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
-          local-dir: ./dist/
-          # Faster reuploads — only changed files
-          state-name: .ftp-deploy-sync-state.json
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: staging-build
+          # Single-commit history keeps the build branch tiny and obvious
+          force_orphan: true
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
+          commit_message: "Build from ${{ github.sha }}"
