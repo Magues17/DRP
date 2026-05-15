@@ -1,13 +1,16 @@
 name: Build Staging
 
-# When `staging` is updated, build the Vite app and publish the compiled
-# `dist/` contents to the `staging-build` branch. Hostinger's GIT
-# integration is configured to pull from `staging-build`, so the built
-# site is what actually lands in public_html.
+# On every push to `local`, run `npm run build` and force-push the
+# resulting `dist/` contents to the `staging` branch. Hostinger's GIT
+# integration is pointed at `staging`, so the compiled site is what
+# lands in public_html.
+#
+# IMPORTANT: `staging` is a build-output branch — do not edit it by
+# hand. Every run overwrites it with a single orphan commit.
 
 on:
   push:
-    branches: [staging]
+    branches: [local]
   workflow_dispatch:
 
 permissions:
@@ -33,13 +36,12 @@ jobs:
       - name: Build site
         run: npm run build
 
-      - name: Publish dist/ to staging-build branch
+      - name: Publish dist/ to staging branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          publish_branch: staging-build
-          # Single-commit history keeps the build branch tiny and obvious
+          publish_branch: staging
           force_orphan: true
           user_name: github-actions[bot]
           user_email: github-actions[bot]@users.noreply.github.com

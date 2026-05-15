@@ -19,28 +19,29 @@ The production files will be created inside the `dist` folder.
 
 ## Environments
 
-| Branch          | Purpose                                       | URL                       |
-| --------------- | --------------------------------------------- | ------------------------- |
-| `local`         | Active development                            | `localhost:5173`          |
-| `staging`       | Pre-launch testing — source for the build     | (not served directly)     |
-| `staging-build` | Auto-generated build output served by Hostinger | http://drp.4klabs.net/  |
-| `live`          | Production (TBD)                              | _not yet deployed_        |
+| Branch    | Purpose                                            | URL                    |
+| --------- | -------------------------------------------------- | ---------------------- |
+| `local`   | Active development (source code)                   | `localhost:5173`       |
+| `staging` | Auto-built artifact pulled by Hostinger — do not edit | http://drp.4klabs.net/ |
+| `live`    | Production (TBD)                                   | _not yet deployed_     |
 
-### Why a build branch?
+### How deploys work
 
-The browser cannot execute the JSX source in `staging` directly. The
-GitHub Action `.github/workflows/deploy-staging.yml` runs `npm run build`
-on every push to `staging` and force-pushes the resulting `dist/`
-contents to `staging-build`. Hostinger's GIT integration pulls from
-`staging-build` into `public_html` and serves the compiled site.
+`.github/workflows/deploy-staging.yml` triggers on every push to `local`.
+It runs `npm run build` and force-pushes the compiled `dist/` contents
+as a single orphan commit to the `staging` branch. Hostinger's GIT
+integration is pointed at `staging` and pulls the result into
+`public_html`, so `drp.4klabs.net` is always whatever you last pushed
+to `local`.
+
+**Do not commit to `staging` by hand** — anything there is wiped on the
+next build.
 
 ### Promotion flow
 
 ```bash
-# work happens on local
-git checkout staging
-git merge local
-git push                # triggers build → publishes to staging-build → live on drp.4klabs.net
+# edit on local, push, drp.4klabs.net auto-updates
+git push origin local
 ```
 
 ## Replace before launch
