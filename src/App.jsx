@@ -19,17 +19,10 @@ import {
 
 const PHONE_NUMBER = "2520000000";
 const PHONE_DISPLAY = "252-000-0000";
-const PRODUCTION_URL = "https://donerightplumbing.com";
-
-function useSiteUrl() {
-  const [url, setUrl] = React.useState(PRODUCTION_URL);
-  React.useEffect(() => {
-    if (typeof window === "undefined") return;
-    const { origin } = window.location;
-    if (origin.startsWith("http")) setUrl(origin);
-  }, []);
-  return url;
-}
+// Site URL is hard-coded so the QR on business cards always points at the
+// live site, regardless of where this page is currently being served from
+// (localhost, preview, etc).
+const SITE_URL = "https://drp.4klabs.net/";
 
 const services = [
   {
@@ -71,7 +64,6 @@ const serviceAreas = [
 ];
 
 export default function App() {
-  const siteUrl = useSiteUrl();
   return (
     <main className="min-h-screen bg-[#f6f1e8] text-slate-900">
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#071d3a]/95 text-white backdrop-blur">
@@ -359,7 +351,7 @@ export default function App() {
 
               <div className="mt-6 flex items-center justify-center rounded-3xl border-4 border-[#071d3a] bg-white p-6">
                 <QRCodeSVG
-                  value={siteUrl}
+                  value={SITE_URL}
                   size={220}
                   bgColor="#ffffff"
                   fgColor="#071d3a"
@@ -368,7 +360,7 @@ export default function App() {
                 />
               </div>
 
-              <p className="mt-5 text-center text-sm font-bold text-slate-700 break-all">{siteUrl}</p>
+              <p className="mt-5 text-center text-sm font-bold text-slate-700 break-all">{SITE_URL}</p>
               <p className="mt-3 text-center text-xs leading-6 text-slate-500">
                 <Printer className="mr-1 inline h-3.5 w-3.5" />
                 Scan with any phone camera to open the website.
