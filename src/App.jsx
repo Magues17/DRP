@@ -17,8 +17,8 @@ import {
   Printer,
 } from "lucide-react";
 
-const PHONE_NUMBER = "2520000000";
-const PHONE_DISPLAY = "252-000-0000";
+const PHONE_NUMBER = "2525679351";
+const PHONE_DISPLAY = "252-567-9351";
 // Site URL is hard-coded so the QR on business cards always points at the
 // live site, regardless of where this page is currently being served from
 // (localhost, preview, etc).
@@ -88,7 +88,7 @@ export default function App() {
 
           <div className="flex items-center gap-3">
             <a
-              href="tel:2520000000"
+              href={`tel:${PHONE_NUMBER}`}
               className="hidden rounded-full bg-[#f2c46d] px-5 py-2.5 text-sm font-black text-[#071d3a] shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:bg-[#ffd88b] sm:inline-flex"
             >
               Call Justin
@@ -123,7 +123,7 @@ export default function App() {
 
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
               <a
-                href="tel:2520000000"
+                href={`tel:${PHONE_NUMBER}`}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-[#f2c46d] px-7 py-4 text-base font-black text-[#071d3a] shadow-2xl shadow-black/25 transition hover:-translate-y-1 hover:bg-[#ffd88b]"
               >
                 <Phone className="h-5 w-5" />
@@ -413,11 +413,11 @@ export default function App() {
             </p>
           </div>
           <a
-            href="tel:2520000000"
+            href={`tel:${PHONE_NUMBER}`}
             className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#f2c46d] px-7 py-4 text-base font-black text-[#071d3a] shadow-xl transition hover:-translate-y-1 hover:bg-[#ffd88b]"
           >
             <Phone className="h-5 w-5" />
-            252-000-0000
+            {PHONE_DISPLAY}
           </a>
         </div>
       </section>
@@ -442,7 +442,7 @@ export default function App() {
           <div>
             <h3 className="font-black text-[#f2c46d]">Contact</h3>
             <div className="mt-4 space-y-3 text-sm text-white/70">
-              <p className="flex items-center gap-2"><Phone className="h-4 w-4" /> 252-000-0000</p>
+              <p className="flex items-center gap-2"><Phone className="h-4 w-4" /> {PHONE_DISPLAY}</p>
               <p className="flex items-center gap-2"><Mail className="h-4 w-4" /> service@donerightplumbing.com</p>
               <p className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Tarboro, NC</p>
             </div>
