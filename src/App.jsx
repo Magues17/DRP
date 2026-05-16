@@ -15,6 +15,9 @@ import {
   Menu,
   QrCode,
   Printer,
+  ChevronLeft,
+  ChevronRight,
+  Camera,
 } from "lucide-react";
 
 const PHONE_NUMBER = "2525679351";
@@ -47,12 +50,115 @@ const services = [
   },
 ];
 
-const trustPoints = [
-  "Local Tarboro-based plumbing service",
-  "Honest estimates before work begins",
-  "Clean, respectful, professional work",
-  "Built around doing the job right the first time",
+// Replace these placeholders with real job photos once Justin has them.
+// `src` can be any public image URL or a path under /public.
+const galleryPhotos = [
+  {
+    src: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=1200&q=80",
+    alt: "Plumber working on a kitchen sink",
+    caption: "Kitchen Sink Repair",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=1200&q=80",
+    alt: "Fresh copper pipework",
+    caption: "Copper Pipe Install",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1585129777188-94600bc7b4b3?w=1200&q=80",
+    alt: "Bathroom plumbing fixtures",
+    caption: "Bathroom Fixtures",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+    alt: "Plumbing tools laid out on workbench",
+    caption: "Right Tools for the Job",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=1200&q=80",
+    alt: "Pipe wrench on metal pipe",
+    caption: "Leak Repair Service",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=1200&q=80",
+    alt: "Clean modern bathroom after install",
+    caption: "Finished Bathroom",
+  },
 ];
+
+function PhotoCarousel({ photos }) {
+  const [index, setIndex] = React.useState(0);
+  const count = photos.length;
+  const prev = () => setIndex((i) => (i - 1 + count) % count);
+  const next = () => setIndex((i) => (i + 1) % count);
+
+  return (
+    <div className="relative">
+      <div className="relative overflow-hidden rounded-[2rem] border border-[#dbc8a8] bg-white shadow-2xl shadow-slate-900/10">
+        <div
+          className="flex transition-transform duration-500 ease-out"
+          style={{ transform: `translateX(-${index * 100}%)` }}
+        >
+          {photos.map((photo) => (
+            <div key={photo.src} className="relative aspect-[4/3] w-full shrink-0">
+              <img
+                src={photo.src}
+                alt={photo.alt}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#071d3a]/85 via-[#071d3a]/30 to-transparent p-5">
+                <p className="text-xs font-black uppercase tracking-[0.3em] text-[#f2c46d]">
+                  Done Right
+                </p>
+                <p className="mt-1 text-lg font-black text-white drop-shadow">
+                  {photo.caption}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={prev}
+          aria-label="Previous photo"
+          className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 text-[#071d3a] shadow-lg ring-1 ring-black/5 transition hover:bg-white"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+        <button
+          type="button"
+          onClick={next}
+          aria-label="Next photo"
+          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 text-[#071d3a] shadow-lg ring-1 ring-black/5 transition hover:bg-white"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
+      </div>
+
+      <div className="mt-5 flex items-center justify-center gap-2">
+        {photos.map((photo, i) => (
+          <button
+            key={photo.src}
+            type="button"
+            onClick={() => setIndex(i)}
+            aria-label={`Go to photo ${i + 1}`}
+            className={
+              "h-2.5 rounded-full transition-all " +
+              (i === index
+                ? "w-8 bg-[#071d3a]"
+                : "w-2.5 bg-[#071d3a]/30 hover:bg-[#071d3a]/50")
+            }
+          />
+        ))}
+      </div>
+
+      <p className="mt-3 text-center text-xs font-bold uppercase tracking-[0.25em] text-[#9b6a2d]">
+        {index + 1} / {count} &middot; Recent Work
+      </p>
+    </div>
+  );
+}
 
 const serviceAreas = [
   "Tarboro",
@@ -266,20 +372,12 @@ export default function App() {
             </div>
           </div>
 
-          <div className="grid content-center gap-4">
-            {trustPoints.map((point) => (
-              <div key={point} className="flex gap-4 rounded-3xl border border-[#dbc8a8] bg-white/80 p-5 shadow-lg shadow-slate-900/5">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#071d3a]">
-                  <CheckCircle2 className="h-6 w-6 text-[#f2c46d]" />
-                </div>
-                <div>
-                  <h3 className="font-black text-[#071d3a]">{point}</h3>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    A trust-focused message that can be backed up with real photos, customer reviews, and before/after job examples.
-                  </p>
-                </div>
-              </div>
-            ))}
+          <div className="content-center">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#dbc8a8] bg-white/80 px-4 py-2 text-xs font-black uppercase tracking-[0.25em] text-[#9b6a2d] shadow-sm">
+              <Camera className="h-4 w-4" />
+              Photo Gallery
+            </div>
+            <PhotoCarousel photos={galleryPhotos} />
           </div>
         </div>
       </section>
