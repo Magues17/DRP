@@ -1,4 +1,5 @@
 import React from "react";
+import { QRCodeSVG } from "qrcode.react";
 import {
   Phone,
   Wrench,
@@ -12,7 +13,23 @@ import {
   Hammer,
   Mail,
   Menu,
+  QrCode,
+  Printer,
 } from "lucide-react";
+
+const PHONE_NUMBER = "2520000000";
+const PHONE_DISPLAY = "252-000-0000";
+const PRODUCTION_URL = "https://donerightplumbing.com";
+
+function useSiteUrl() {
+  const [url, setUrl] = React.useState(PRODUCTION_URL);
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    const { origin } = window.location;
+    if (origin.startsWith("http")) setUrl(origin);
+  }, []);
+  return url;
+}
 
 const services = [
   {
@@ -54,6 +71,7 @@ const serviceAreas = [
 ];
 
 export default function App() {
+  const siteUrl = useSiteUrl();
   return (
     <main className="min-h-screen bg-[#f6f1e8] text-slate-900">
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#071d3a]/95 text-white backdrop-blur">
@@ -72,6 +90,7 @@ export default function App() {
             <a className="transition hover:text-[#f2c46d]" href="#services">Services</a>
             <a className="transition hover:text-[#f2c46d]" href="#about">Why Us</a>
             <a className="transition hover:text-[#f2c46d]" href="#areas">Service Area</a>
+            <a className="transition hover:text-[#f2c46d]" href="#qr">QR Codes</a>
             <a className="transition hover:text-[#f2c46d]" href="#contact">Contact</a>
           </nav>
 
@@ -311,6 +330,84 @@ export default function App() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section id="qr" className="bg-[#eadcc5] px-5 py-20 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm font-black uppercase tracking-[0.3em] text-[#9b6a2d]">Scan to Connect</p>
+            <h2 className="mt-4 text-4xl font-black tracking-tight text-[#071d3a] sm:text-5xl">
+              Print these on your business cards.
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-slate-700">
+              One scan to visit the website. One scan to call Justin. No typing, no fuss.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-8 md:grid-cols-2">
+            <article className="rounded-[2.5rem] border border-[#dbc8a8] bg-white p-8 shadow-2xl shadow-slate-900/10">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#071d3a]">
+                  <QrCode className="h-6 w-6 text-[#f2c46d]" />
+                </div>
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.25em] text-[#9b6a2d]">Website</p>
+                  <h3 className="text-2xl font-black text-[#071d3a]">Visit Our Site</h3>
+                </div>
+              </div>
+
+              <div className="mt-6 flex items-center justify-center rounded-3xl border-4 border-[#071d3a] bg-white p-6">
+                <QRCodeSVG
+                  value={siteUrl}
+                  size={220}
+                  bgColor="#ffffff"
+                  fgColor="#071d3a"
+                  level="H"
+                  includeMargin={false}
+                />
+              </div>
+
+              <p className="mt-5 text-center text-sm font-bold text-slate-700 break-all">{siteUrl}</p>
+              <p className="mt-3 text-center text-xs leading-6 text-slate-500">
+                <Printer className="mr-1 inline h-3.5 w-3.5" />
+                Scan with any phone camera to open the website.
+              </p>
+            </article>
+
+            <article className="rounded-[2.5rem] border border-[#dbc8a8] bg-white p-8 shadow-2xl shadow-slate-900/10">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#071d3a]">
+                  <Phone className="h-6 w-6 text-[#f2c46d]" />
+                </div>
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.25em] text-[#9b6a2d]">Call Justin</p>
+                  <h3 className="text-2xl font-black text-[#071d3a]">Tap to Call</h3>
+                </div>
+              </div>
+
+              <div className="mt-6 flex items-center justify-center rounded-3xl border-4 border-[#071d3a] bg-white p-6">
+                <QRCodeSVG
+                  value={`tel:+1${PHONE_NUMBER}`}
+                  size={220}
+                  bgColor="#ffffff"
+                  fgColor="#071d3a"
+                  level="H"
+                  includeMargin={false}
+                />
+              </div>
+
+              <p className="mt-5 text-center text-sm font-bold text-slate-700">{PHONE_DISPLAY}</p>
+              <p className="mt-3 text-center text-xs leading-6 text-slate-500">
+                <Phone className="mr-1 inline h-3.5 w-3.5" />
+                Scanning opens the phone dialer ready to call.
+              </p>
+            </article>
+          </div>
+
+          <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-7 text-slate-600">
+            For business cards, right-click either QR code and choose <span className="font-bold">Save image as…</span> to download a print-ready SVG.
+          </p>
         </div>
       </section>
 
